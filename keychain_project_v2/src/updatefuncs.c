@@ -1,65 +1,36 @@
-#include <inc/updatefuncs.h>
 #include <msp430.h>
+#include <stdlib.h>
+#include "inc/mainheader.h"
+#include "inc/updatefuncs.h"
 
 /*
  * variable declarations
  */
-int state_r = 0;
-int state_g = 25;
-int state_b = 0;
 
 int sel_led_r = 1;
-int sel_led_b = 1;
 int sel_led_g = 1;
+int sel_led_b = 1;
 
-
-int red1 = 0;
-int red2 = 0;
-int red3 = 0;
-
-int blue1 = 0;
-int blue2 = 0;
-int blue3 = 0;
-
-int green1 = 0;
-int green2 = 0;
-int green3 = 0;
-
-
-int goal_red1 = 0;
-int goal_red2 = 0;
-int goal_red3 = 0;
-
-int goal_blue1 = 0;
-int goal_blue2 = 0;
-int goal_blue3 = 0;
-
-int goal_green1 = 0;
-int goal_green2 = 0;
-int goal_green3 = 0;
-
-long long delay = 0;
-int loops = 0;
 //make all leds equal
 void equalize()
 {
-    red2 = red3 = red1;
-    blue2 = blue3 = blue1;
-    green2 = green3 = green1;
+    led2.red = led3.red = led1.red;
+    led2.blue = led3.blue = led1.blue;
+    led2.green = led3.green = led1.green;
 }
 
 void offset1()
 {
-    red2 = blue3 = green1;
-    blue2 = green3 = red1;
-    green2 = red3 = blue1;
+    led2.red = led3.blue = led1.green;
+    led2.blue = led3.green = led1.red;
+    led2.green = led3.red = led1.blue;
 }
 
 void offset2()
 {
-    red2 = red3 = green1;
-    blue2 = blue3 = red1;
-    green2 = green3 = blue1;
+    led2.red = led3.red = led1.green;
+    led2.blue = led3.blue = led1.red;
+    led2.green = led3.green = led1.blue;
 }
 
 
@@ -71,21 +42,21 @@ void offset2()
 //function to make rgb value for led 1 random
 void random_1()
 {
-    red1 = rand()%255;
-    green1 = rand()%255;
-    blue1 = rand()%255;
+    led1.red = rand()%255;
+    led1.green = rand()%255;
+    led1.blue = rand()%255;
 
     // 1/4 chance to disable one of the rgb value's, this increases the average saturation of generated colors
     switch (rand()%4)
     {
     case 0:
-        red1 = 0;
+        led1.red = 0;
         break;
     case 1:
-        green1 = 0;
+        led1.green = 0;
         break;
     case 2:
-        blue1 = 0;
+        led1.blue = 0;
         break;
     case 3:
         break;
@@ -96,60 +67,60 @@ void random_1()
 void random_all()
 {
 
-    red1 = rand()%255;
-    green1 = rand()%255;
-    blue1 = rand()%255;
+    led1.red = rand()%255;
+    led1.green = rand()%255;
+    led1.blue = rand()%255;
 
     switch (rand()%4)
     {
     case 0:
-        red1 = 0;
+        led1.red = 0;
         break;
     case 1:
-        green1 = 0;
+        led1.green = 0;
         break;
     case 2:
-        blue1 = 0;
+        led1.blue = 0;
         break;
     case 3:
         break;
     }
 
 
-    red2 = rand()%255;
-    green2 = rand()%255;
-    blue2 = rand()%255;
+    led2.red = rand()%255;
+    led2.green = rand()%255;
+    led2.blue = rand()%255;
 
     switch (rand()%4)
     {
     case 0:
-        red2 = 0;
+        led2.red = 0;
         break;
     case 1:
-        green2 = 0;
+        led2.green = 0;
         break;
     case 2:
-        blue2 = 0;
+        led2.blue = 0;
         break;
     case 3:
         break;
     }
 
 
-    red3 = rand()%255;
-    green3 = rand()%255;
-    blue3 = rand()%255;
+    led3.red = rand()%255;
+    led3.green = rand()%255;
+    led3.blue = rand()%255;
 
     switch (rand()%4)
     {
     case 0:
-        red3 = 0;
+        led3.red = 0;
         break;
     case 1:
-        green3 = 0;
+        led3.green = 0;
         break;
     case 2:
-        blue3 = 0;
+        led3.blue = 0;
         break;
     case 3:
         break;
@@ -160,20 +131,20 @@ void random_all()
 void random_1_goal()
 {
 
-    goal_red1 = rand()%255;
-    goal_green1 = rand()%255;
-    goal_blue1 = rand()%255;
+    led1.goal_red = rand()%255;
+    led1.goal_green = rand()%255;
+    led1.goal_blue = rand()%255;
 
     switch (rand()%4)
     {
     case 0:
-        goal_red1 = 0;
+        led1.goal_red = 0;
         break;
     case 1:
-        goal_green1 = 0;
+        led1.goal_green = 0;
         break;
     case 2:
-        goal_blue1 = 0;
+        led1.goal_blue = 0;
         break;
     case 3:
         break;
@@ -184,58 +155,58 @@ void random_1_goal()
 void random_all_goal()
 {
 
-    goal_red1 = rand()%255;
-    goal_green1 = rand()%255;
-    goal_blue1 = rand()%255;
+    led1.goal_red = rand()%255;
+    led1.goal_green = rand()%255;
+    led1.goal_blue = rand()%255;
 
     switch (rand()%4)
     {
     case 0:
-        goal_red1 = 0;
+        led1.goal_red = 0;
         break;
     case 1:
-        goal_green1 = 0;
+        led1.goal_green = 0;
         break;
     case 2:
-        goal_blue1 = 0;
+        led1.goal_blue = 0;
         break;
     case 3:
         break;
     }
 
-    goal_red2 = rand()%255;
-    goal_green2 = rand()%255;
-    goal_blue2 = rand()%255;
+    led2.goal_red = rand()%255;
+    led2.goal_green = rand()%255;
+    led2.goal_blue = rand()%255;
 
     switch (rand()%4)
     {
     case 0:
-        goal_red2 = 0;
+        led2.goal_red = 0;
         break;
     case 1:
-        goal_green2 = 0;
+        led2.goal_green = 0;
         break;
     case 2:
-        goal_blue2 = 0;
+        led2.goal_blue = 0;
         break;
     case 3:
         break;
     }
 
-    goal_red3 = rand()%255;
-    goal_green3 = rand()%255;
-    goal_blue3 = rand()%255;
+    led3.goal_red = rand()%255;
+    led3.goal_green = rand()%255;
+    led3.goal_blue = rand()%255;
 
     switch (rand()%4)
     {
     case 0:
-        goal_red3 = 0;
+        led3.goal_red = 0;
         break;
     case 1:
-        goal_green3 = 0;
+        led3.goal_green = 0;
         break;
     case 2:
-        goal_blue3 = 0;
+        led3.goal_blue = 0;
         break;
     case 3:
         break;
@@ -257,25 +228,28 @@ void random_all_goal()
 //normal chase
 void chase()
 {
+    static long long delay = 0;
     delay++;
     offset1();
     if (delay == 30000)
     {
         delay = 0;
 
-        int bluetemp = blue1;
-        int greentemp = green1;
-        int redtemp = red1;
+        int bluetemp = led1.blue;
+        int greentemp = led1.green;
+        int redtemp = led1.red;
 
-        red1 = greentemp;
-        green1 = bluetemp;
-        blue1 = redtemp;
+        led1.red = greentemp;
+        led1.green = bluetemp;
+        led1.blue = redtemp;
     }
 }
 
 //random chase
 void random_chase()
 {
+    static long long delay = 0;
+    static int loops = 0;
     delay++;
     offset1();
     if (delay == 30000)
@@ -289,19 +263,21 @@ void random_chase()
             random_1();
         }
 
-        int bluetemp = blue1;
-        int greentemp = green1;
-        int redtemp = red1;
+        int bluetemp = led1.blue;
+        int greentemp = led1.green;
+        int redtemp = led1.red;
 
-        red1 = greentemp;
-        green1 = bluetemp;
-        blue1 = redtemp;
+        led1.red = greentemp;
+        led1.green = bluetemp;
+        led1.blue = redtemp;
     }
 }
 
 //random chase
 void color_chase()
 {
+    static long long delay = 0;
+    static int loops = 0;
     delay++;
     offset1();
     if (delay == 30000)
@@ -312,16 +288,16 @@ void color_chase()
         if (loops == 3)
         {
             loops = 0;
-            red1 = rand()%255;
+            led1.red = rand()%255;
         }
 
-        int bluetemp = blue1;
-        int greentemp = green1;
-        int redtemp = red1;
+        int bluetemp = led1.blue;
+        int greentemp = led1.green;
+        int redtemp = led1.red;
 
-        red1 = greentemp;
-        green1 = bluetemp;
-        blue1 = redtemp;
+        led1.red = greentemp;
+        led1.green = bluetemp;
+        led1.blue = redtemp;
     }
 }
 
@@ -332,6 +308,7 @@ void color_chase()
 //sync random
 void sync_random()
 {
+    static long long delay = 0;
     delay++;
     equalize();
     if(delay == 30000)
@@ -344,6 +321,7 @@ void sync_random()
 //async random
 void async_random()
 {
+    static long long delay = 0;
     delay++;
     offset1();
     if(delay == 30000)
@@ -356,6 +334,7 @@ void async_random()
 //all random
 void random()
 {
+    static long long delay = 0;
     delay++;
     if (delay == 100000)
     {
@@ -372,12 +351,13 @@ void random()
 //all random
 void random_breath()
 {
+    static long long delay = 0;
     delay++;
     if (delay == 1000)
     {
         delay = 0;
         interpolate();
-        if ( goal_red1 == red1 & goal_green1 == green1 & goal_blue1 == blue1 & goal_red2 == red2 & goal_green2 == green2 & goal_blue2 == blue2 & goal_red3 == red3 & goal_green3 == green3 & goal_blue3 == blue3 )
+        if ( led1.goal_red == led1.red & led1.goal_green == led1.green & led1.goal_blue == led1.blue & led2.goal_red == led2.red & led2.goal_green == led2.green & led2.goal_blue == led2.blue & led3.goal_red == led3.red & led3.goal_green == led3.green & led3.goal_blue == led3.blue )
         {
             random_all_goal();
         }
@@ -387,6 +367,7 @@ void random_breath()
 //sync random
 void sync_random_breath()
 {
+    static long long delay = 0;
     delay++;
     equalize();
     if (delay == 1000)
@@ -394,7 +375,7 @@ void sync_random_breath()
         delay = 0;
         interpolate1();
 
-        if (goal_red1 == red1 & goal_green1 == green1 & goal_blue1 == blue1)
+        if (led1.goal_red == led1.red & led1.goal_green == led1.green & led1.goal_blue == led1.blue)
         {
             random_1_goal();
         }
@@ -404,6 +385,7 @@ void sync_random_breath()
 //async random
 void async_random_breath()
 {
+    static long long delay = 0;
     delay++;
     offset1();
     if (delay == 1000)
@@ -411,7 +393,7 @@ void async_random_breath()
         delay = 0;
         interpolate1();
 
-        if (goal_red1 == red1 & goal_green1 == green1 & goal_blue1 == blue1)
+        if (led1.goal_red == led1.red & led1.goal_green == led1.green & led1.goal_blue == led1.blue)
         {
             random_1_goal();
         }
@@ -421,51 +403,52 @@ void async_random_breath()
 //random per color
 void color_random_breath()
 {
+    static long long delay = 0;
     delay++;
     if (delay == 1000)
     {
         delay = 0;
         interpolate();
 
-        if (goal_red1 == red1)
+        if (led1.goal_red == led1.red)
         {
-            goal_red1 = rand()%255;
+            led1.goal_red = rand()%255;
         }
-        if (goal_green1 == green1)
+        if (led1.goal_green == led1.green)
         {
-            goal_green1 = rand()%255;
+            led1.goal_green = rand()%255;
         }
-        if (goal_blue1 == blue1)
+        if (led1.goal_blue == led1.blue)
         {
-            goal_blue1 = rand()%255;
-        }
-
-
-        if (goal_red2 == red2)
-        {
-            goal_red2 = rand()%255;
-        }
-        if (goal_green2 == green2)
-        {
-            goal_green2 = rand()%255;
-        }
-        if (goal_blue2 == blue2)
-        {
-            goal_blue2 = rand()%255;
+            led1.goal_blue = rand()%255;
         }
 
 
-        if (goal_red3 == red3)
+        if (led2.goal_red == led2.red)
         {
-            goal_red3 = rand()%355;
+            led2.goal_red = rand()%255;
         }
-        if (goal_green3 == green3)
+        if (led2.goal_green == led2.green)
         {
-            goal_green3 = rand()%255;
+            led2.goal_green = rand()%255;
         }
-        if (goal_blue3 == blue3)
+        if (led2.goal_blue == led2.blue)
         {
-            goal_blue3 = rand()%355;
+            led2.goal_blue = rand()%255;
+        }
+
+
+        if (led3.goal_red == led3.red)
+        {
+            led3.goal_red = rand()%255;
+        }
+        if (led3.goal_green == led3.green)
+        {
+            led3.goal_green = rand()%255;
+        }
+        if (led3.goal_blue == led3.blue)
+        {
+            led3.goal_blue = rand()%255;
         }
     }
 }
@@ -478,45 +461,46 @@ void color_random_breath()
 void rainbow()
 {
     //r -> rg
-    if ((red1 == 255) & (green1 == 0) & (blue1 == 0))
+    if ((led1.red == 255) & (led1.green == 0) & (led1.blue == 0))
     {
-        goal_green1 = 255;
+        led1.goal_green = 255;
     }
 
     //rg -> g
-    if ((red1 == 255) & (green1 == 255) & (blue1 == 0))
+    if ((led1.red == 255) & (led1.green == 255) & (led1.blue == 0))
     {
-        goal_red1 = 0;
+        led1.goal_red = 0;
     }
 
     //g -> gb
-    if ((red1 == 0) & (green1 == 255) & (blue1 == 0))
+    if ((led1.red == 0) & (led1.green == 255) & (led1.blue == 0))
     {
-        goal_blue1 = 255;
+        led1.goal_blue = 255;
     }
 
     //gb -> b
-    if ((red1 == 0) & (green1 == 255) & (blue1 == 255))
+    if ((led1.red == 0) & (led1.green == 255) & (led1.blue == 255))
     {
-        goal_green1 = 0;
+        led1.goal_green = 0;
     }
 
     //b -> rb
-    if ((red1 == 0) & (green1 == 0) & (blue1 == 255))
+    if ((led1.red == 0) & (led1.green == 0) & (led1.blue == 255))
     {
-        goal_red1 = 255;
+        led1.goal_red = 255;
     }
 
     //rb -> r
-    if ((red1 == 255) & (green1 == 0) & (blue1 == 255))
+    if ((led1.red == 255) & (led1.green == 0) & (led1.blue == 255))
     {
-        goal_blue1 = 0;
+        led1.goal_blue = 0;
     }
 }
 
 //Synchronous
 void sync_rainbow()
 {
+    static long long delay = 0;
     equalize();
     delay++;
     if (delay == 1000)
@@ -530,7 +514,7 @@ void sync_rainbow()
 //async
 void async_rainbow()
 {
-
+    static long long delay = 0;
     delay++;
     offset1();
     if (delay == 300)
@@ -544,7 +528,7 @@ void async_rainbow()
 //top to bottom
 void rainbow_top_to_bottom()
 {
-
+    static long long delay = 0;
     delay++;
     offset2();
     if (delay == 300)
@@ -565,40 +549,40 @@ void interpolate1()
     //red
 
     //if goal_red is bigger then red, increment red
-    if (goal_red1 > red1)
+    if (led1.goal_red > led1.red)
     {
-        red1++;
+        led1.red++;
     }
     //if goal_red is smaller then red, decrement red
-    else if (goal_red1 < red1)
+    else if (led1.goal_red < led1.red)
     {
-        red1--;
+        led1.red--;
     }
 
     //green
 
     //if goal_green is bigger then green, increment green
-    if (goal_green1 > green1)
+    if (led1.goal_green > led1.green)
     {
-        green1++;
+        led1.green++;
     }
     //if goal_green is smaller then green, decrement green
-    else if (goal_green1 < green1)
+    else if (led1.goal_green < led1.green)
     {
-        green1--;
+        led1.green--;
     }
 
     //blue
 
     //if goal_blue is bigger then blue, increment blue
-    if (goal_blue1 > blue1)
+    if (led1.goal_blue > led1.blue)
     {
-        blue1++;
+        led1.blue++;
     }
     //if goal_blue is smaller then blue, decrement blue
-    else if (goal_blue1 < blue1)
+    else if (led1.goal_blue < led1.blue)
     {
-        blue1--;
+        led1.blue--;
     }
 }
 
@@ -611,33 +595,33 @@ void interpolate()
      */
 
     //red
-    if (goal_red1 > red1)
+    if (led1.goal_red > led1.red)
     {
-        red1++;
+        led1.red++;
     }
-    else if (goal_red1 < red1)
+    else if (led1.goal_red < led1.red)
     {
-        red1--;
+        led1.red--;
     }
 
     //green
-    if (goal_green1 > green1)
+    if (led1.goal_green > led1.green)
     {
-        green1++;
+        led1.green++;
     }
-    else if (goal_green1 < green1)
+    else if (led1.goal_green < led1.green)
     {
-        green1--;
+        led1.green--;
     }
 
     //blue
-    if (goal_blue1 > blue1)
+    if (led1.goal_blue > led1.blue)
     {
-        blue1++;
+        led1.blue++;
     }
-    else if (goal_blue1 < blue1)
+    else if (led1.goal_blue < led1.blue)
     {
-        blue1--;
+        led1.blue--;
     }
 
 
@@ -646,33 +630,33 @@ void interpolate()
      */
 
     //red
-    if (goal_red2 > red2)
+    if (led2.goal_red > led2.red)
     {
-        red2++;
+        led2.red++;
     }
-    else if (goal_red2 < red2)
+    else if (led2.goal_red < led2.red)
     {
-        red2--;
+        led2.red--;
     }
 
     //green
-    if (goal_green2 > green2)
+    if (led2.goal_green > led2.green)
     {
-        green2++;
+        led2.green++;
     }
-    else if (goal_green2 < green2)
+    else if (led2.goal_green < led2.green)
     {
-        green2--;
+        led2.green--;
     }
 
     //blue
-    if (goal_blue2 > blue2)
+    if (led2.goal_blue > led2.blue)
     {
-        blue2++;
+        led2.blue++;
     }
-    else if (goal_blue2 < blue2)
+    else if (led2.goal_blue < led2.blue)
     {
-        blue2--;
+        led2.blue--;
     }
 
 
@@ -681,35 +665,35 @@ void interpolate()
      */
 
     //red
-    if (goal_red3 > red3)
+    if (led3.goal_red > led3.red)
     {
-        red3++;
+        led3.red++;
     }
-    else if (goal_red3 < red3)
+    else if (led3.goal_red < led3.red)
     {
-        red3--;
+        led3.red--;
     }
 
     //green
-    if (goal_green3 > green3)
+    if (led3.goal_green > led3.green)
     {
-        green3++;
+        led3.green++;
     }
-    else if (goal_green3 < green3)
+    else if (led3.goal_green < led3.green)
     {
-        green3--;
+        led3.green--;
     }
 
     //blue
-    if (goal_blue3 > blue3)
+    if (led3.goal_blue > led3.blue)
     {
-        blue3++;
+        led3.blue++;
     }
-    else if (goal_blue3 < blue3)
+    else if (led3.goal_blue < led3.blue)
     {
-        blue3--;
+        led3.blue--;
     }
-    return 0;
+    return;
 }
 
 
@@ -722,15 +706,15 @@ _          _                   _ _   _       _           _                      
 |_|\___|\__,_| |_| |_| |_|\__,_|_|\__|_| .__/|_|\___/_/\_\_|_| |_|\__, |  \___\___/ \__,_|\___|
                                       | |                         __/ |
                                       |_|                        |___/
-/*
- *
  */
+
 /*
  * red update functions
  */
 
 void update_red()
 {
+    static int state_r = 0;
     state_r++;
        //if state reaches 1 before the led switch, turn the red pwm to 0 to avoid bleed over into next led
        if (state_r == 99)
@@ -745,21 +729,21 @@ void update_red()
            if(sel_led_r == 1)
            {
                red_3(0);
-               red = red1;
+               red = led1.red;
                red_1(1);
            }
 
            if(sel_led_r == 2)
            {
                red_1(0);
-               red = red2;
+               red = led2.red;
                red_2(1);
            }
 
            if(sel_led_r == 3)
            {
                red_2(0);
-               red = red3;
+               red = led3.red;
                red_3(1);
            }
 
@@ -819,6 +803,7 @@ void red_3(int state)
 
 void update_blue()
 {
+    static int state_b = 0;
     state_b++;
        if (state_b == 99)
        {
@@ -830,21 +815,21 @@ void update_blue()
            if(sel_led_b == 1)
            {
                blue_3(0);
-               blue = blue1;
+               blue = led1.blue;
                blue_1(1);
            }
 
            if(sel_led_b == 2)
            {
                blue_1(0);
-               blue = blue2;
+               blue = led2.blue;
                blue_2(1);
            }
 
            if(sel_led_b == 3)
            {
                blue_2(0);
-               blue = blue3;
+               blue = led3.blue;
                blue_3(1);
            }
 
@@ -901,6 +886,7 @@ void blue_3(int state)
 
 void update_green()
 {
+    static int state_g = 25;
     state_g++;
        if (state_g == 99)
        {
@@ -912,21 +898,21 @@ void update_green()
            if(sel_led_g == 1)
            {
                green_3(0);
-               green = green1;
+               green = led1.green;
                green_1(1);
            }
 
            if(sel_led_g == 2)
            {
                green_1(0);
-               green = green2;
+               green = led2.green;
                green_2(1);
            }
 
            if(sel_led_g == 3)
            {
                green_2(0);
-               green = green3;
+               green = led3.green;
                green_3(1);
            }
 

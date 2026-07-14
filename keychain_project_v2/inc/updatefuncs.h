@@ -1,17 +1,8 @@
 #ifndef _INC_UPDATEFUNCS_H_
 #define _INC_UPDATEFUNCS_H_
 
-/*
- * renames the TA count/compare registers to corresponding color
- */
-#define red TA0CCR1
-#define blue TA1CCR1
-#define green TA1CCR2
 
-
-/*
- * updates the red led's
- */
+//updates the red led's
 void update_red();
 
 //toggle for individual leds
@@ -33,6 +24,10 @@ void update_green();
 void green_1(int state);
 void green_2(int state);
 void green_3(int state);
+
+//misc
+void interpolate();
+void interpolate1();
 
 //modes
 void chase();

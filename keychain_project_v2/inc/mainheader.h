@@ -1,33 +1,29 @@
 #ifndef _INC_MAINHEADER_H_
 #define _INC_MAINHEADER_H_
 
-int state;
+/*
+ * renames the TA count/compare registers to corresponding color
+ */
+#define red TA0CCR1
+#define blue TA1CCR1
+#define green TA1CCR2
+
 
 //defines the variables that should be modifiable by main.c used in updatefuncs.c
-extern int red1;
-extern int red2;
-extern int red3;
 
-extern int blue1;
-extern int blue2;
-extern int blue3;
+typedef struct led {
+    int red;
+    int green;
+    int blue;
 
-extern int green1;
-extern int green2;
-extern int green3;
+    int goal_red;
+    int goal_green;
+    int goal_blue;
+} led;
 
-
-extern int goal_red1;
-extern int goal_red2;
-extern int goal_red3;
-
-extern int goal_blue1;
-extern int goal_blue2;
-extern int goal_blue3;
-
-extern int goal_green1;
-extern int goal_green2;
-extern int goal_green3;
+led led1;
+led led2;
+led led3;
 
 //toggle function for every led (led: select led 1/2/3, state :0 = off, 1 = on)
 void toggle_led(int led, int state);

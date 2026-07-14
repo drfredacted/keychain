@@ -1,9 +1,7 @@
 #include <msp430.h> 
-//#include <stdio.h>
 #include <stdlib.h>
-#include "inc/updatefuncs.h"
 #include "inc/mainheader.h"
-
+#include "inc/updatefuncs.h"
 
 #pragma vector = TIMER0_A1_VECTOR
 __interrupt void update_timer_0(void)
@@ -25,6 +23,7 @@ __interrupt void update_timer_1(void)
 #pragma vector = PORT1_VECTOR
 __interrupt void button()
 {
+    static int state = 0;
     state++;
 
 }
@@ -77,9 +76,11 @@ int main(void)
     P3SEL |= BIT5 | BIT2 |BIT3;
 
 	__enable_interrupt();
+	led1.red = 255;
+	led1.goal_red = 255;
 	while(1)
 	{
-	    random_breath();
+	    sync_rainbow();
 	}
 	return 0;
 }

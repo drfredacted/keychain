@@ -1,5 +1,5 @@
-#include <inc/mainheader.h>
 #include <msp430.h>
+#include <inc/mainheader.h>
 
 void toggle_led (int led, int state)
 {
