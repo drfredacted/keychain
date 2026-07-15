@@ -37,3 +37,16 @@ void toggle_led (int led, int state)
         }
     }
 }
+
+void reset_led()
+{
+    led1.goal_red = 255;
+    led1.goal_green =0;
+    led1.goal_blue = 0;
+    led2.goal_red = 0;
+    led2.goal_green =0;
+    led2.goal_blue = 0;
+    led3.goal_red = 0;
+    led3.goal_green = 0;
+    led3.goal_blue = 0;
+}

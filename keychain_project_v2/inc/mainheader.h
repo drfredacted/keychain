@@ -28,5 +28,6 @@ led led3;
 //toggle function for every led (led: select led 1/2/3, state :0 = off, 1 = on)
 void toggle_led(int led, int state);
 
+void reset_led();
 
 #endif /* _INC_MAINHEADER_H_ */

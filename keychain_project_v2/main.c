@@ -3,12 +3,17 @@
 #include "inc/mainheader.h"
 #include "inc/updatefuncs.h"
 
+//current led mode variables
+int mode = 1;
+int status = 1;
+
 #pragma vector = TIMER0_A1_VECTOR
 __interrupt void update_timer_0(void)
 {
    update_red();
 
    TA0CTL &= ~TAIFG;
+   return;
 }
 
 #pragma vector = TIMER1_A1_VECTOR
@@ -18,14 +23,39 @@ __interrupt void update_timer_1(void)
    update_green();
 
    TA1CTL &= ~TAIFG;
+   return;
 }
 
 #pragma vector = PORT1_VECTOR
 __interrupt void button()
 {
-    static int state = 0;
-    state++;
+    mode++;
+    P1IFG = 0;
+    if (mode == 5)
+    {
+        mode = 1;
+    }
 
+    switch (mode)
+    {
+    case 1:
+        reset_led();
+        status = (rand()%3)+1;
+        break;
+    case 2:
+        led1.red = 255;
+        led1.green = 0;
+        led1.blue = 0;
+        status = (rand()%3)+1;
+        break;
+    case 3:
+        status = (rand()%4)+1;
+        break;
+    case 4:
+        status = (rand()%3)+1;
+        break;
+    }
+    return;
 }
 
 /**
@@ -80,7 +110,68 @@ int main(void)
 	led1.goal_red = 255;
 	while(1)
 	{
-	    sync_rainbow();
+	    switch (mode)
+	    {
+	    case 1:
+            switch (status)
+            {
+            case 1:
+                sync_rainbow();
+                break;
+            case 2:
+                async_rainbow();
+                break;
+            case 3:
+                rainbow_top_to_bottom();
+                break;
+            }
+            break;
+	    case 2:
+            switch (status)
+            {
+            case 1:
+                chase();
+                break;
+            case 2:
+                random_chase();
+                break;
+            case 3:
+                color_chase();
+                break;
+            }
+            break;
+	    case 3:
+            switch (status)
+            {
+            case 1:
+                random_breath();
+                break;
+            case 2:
+                sync_random_breath();
+                break;
+            case 3:
+                async_random_breath();
+                break;
+            case 4:
+                color_random_breath();
+                break;
+            }
+            break;
+	    case 4:
+            switch (status)
+            {
+            case 1:
+                random();
+                break;
+            case 2:
+                async_random();
+                break;
+            case 3:
+                sync_random();
+                break;
+            }
+            break;
+	    }
 	}
 	return 0;
 }
