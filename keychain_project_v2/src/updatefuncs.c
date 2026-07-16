@@ -3,13 +3,6 @@
 #include "inc/mainheader.h"
 #include "inc/updatefuncs.h"
 
-/*
- * variable declarations
- */
-
-int sel_led_r = 1;
-int sel_led_g = 1;
-int sel_led_b = 1;
 
 //make all leds equal
 void equalize()
@@ -502,7 +495,7 @@ void sync_rainbow()
 {
     static long long delay = 0;
     equalize();
-    delay++;
+     delay++;
     if (delay == 1000)
     {
         delay = 0;
@@ -714,6 +707,7 @@ _          _                   _ _   _       _           _                      
 
 void update_red()
 {
+    static int sel_led_r = 1;
     static int state_r = 0;
     state_r++;
        //if state reaches 1 before the led switch, turn the red pwm to 0 to avoid bleed over into next led
@@ -803,6 +797,7 @@ void red_3(int state)
 
 void update_blue()
 {
+    static int sel_led_b = 1;
     static int state_b = 0;
     state_b++;
        if (state_b == 99)
@@ -886,6 +881,7 @@ void blue_3(int state)
 
 void update_green()
 {
+    static int sel_led_g = 1;
     static int state_g = 25;
     state_g++;
        if (state_g == 99)
